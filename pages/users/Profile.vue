@@ -45,10 +45,12 @@
           </div>
 
           <div class="form-control m-3">
-            <p class="text-center select-none">
+            <p class="text-center text-sm select-none mb-2">
               This disable your account and your posts will isn't available!
             </p>
-            <button type="button" class="btn btn-warning">Disable your Account!</button>
+            <button type="button" class="btn btn-warning" @click="disableProfile">
+              Disable your Account!
+            </button>
           </div>
 
           <div class="justify-center card-actions">
@@ -76,17 +78,71 @@ const form = reactive({
   gender_id: 1
 })
 
+let backup = null
+
 const genders = ref([])
 
 const updateProfile = async () => {
-  console.log({...form})
+  try {
+    const { data, error } = await $supabase.from('profiles').update({
+      id: backup.id,
+      fullname: form.fullname,
+      website: form.website,
+      bio: form.bio,
+      gender_id: form.gender_id
+    })
+
+    if (error) throw error
+
+    backup = { ...data }
+
+  } catch(error) {
+    console.error(error.message)
+  }
+}
+
+const resetProfile = async () => {
+  form.fullname = backup.fullname
+  form.website = backup.website
+  form.bio = backup.bio
+  form.gender_id = backup.gender_id
+}
+
+const disableProfile = async () => {
+  try {
+    const { data, error } = await $supabase.from('profiles').update({
+      id: backup.id,
+      disable: true
+    })
+
+    if (error) throw error
+
+  } catch(error) {
+    console.error(error.message)
+  }
 }
 
 onMounted(async () => {
-  const { data, error } = await $supabase.from('genders').select('*')
-  if (!error) {
-    genders.value = data
+  try {
+    const PromGenders = $supabase.from('genders').select('*')
+    const PromProfile = $supabase.from('profiles').select('*').single()
+
+    const [gend, prof] = await Promise.all([PromGenders, PromProfile])
+    if (gend.error) throw gend.error
+    if (prof.error) throw prof.error
+
+    genders.value = gend.data
+
+    backup = { ...prof.data }
+    form.fullname = prof.data.fullname
+    form.website = prof.data.website
+    form.bio = prof.data.bio
+    form.gender_id = prof.data.gender_id
+
+  } catch(error) {
+    console.error(error.message)
   }
+
 })
 
 </script>
