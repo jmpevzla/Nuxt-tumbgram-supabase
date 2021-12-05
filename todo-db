@@ -1,0 +1,62 @@
+schemas
+* = public
++ = storage
+-----------------------
+
+* profiles
+
+id: uuid -> auth.users.id
+username: varchar, unique
+fullname: varchar
+avatar_url: varchar: NULL
+website: varchar: ''
+bio: text: ''
+gender_id: bigint -> gender.id : 1(.-'Not specified')
+disable: boolean: false
+
+* genders
+
+id: int primary key autoinc
+name: varchar
+
+1.- Not specified
+2.- Male
+3.- Female
+4.- Custom
+5.- Prefer Not To Say
+
+* posts
+
+id: bigint primary key autoinc
+user_id: uuid -> profiles.id
+image_url: varchar
+content: text
+created_at: timestamp
+updated_at: timestamp
+
+
+* comments
+id: bigint primary key autoinc
+user_id: uuid -> profiles.id
+post_id: bigint -> posts.id
+content: text
+created_at: timestamp
+updated_at: timestamp
+
+
+* posts_likes
+id: bigint primary key autoinc
+[user_id: uuid -> profiles.id
+post_id: bigint -> posts.id]: unique
+created_at: timestamp
+
+* comments_likes
+id: bigint primary key autoinc
+[user_id: uuid -> profiles.id
+comment_id: bigint -> comments.id]: unique
+created_at: timestamp
+
+
++ avatars
+
++ posts

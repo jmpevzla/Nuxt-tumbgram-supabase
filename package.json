@@ -1,0 +1,36 @@
+{
+  "name": "tumbgram",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "start": "node .output/server/index.mjs",
+    "sequelize": "npx sequelize-cli",
+    "tw-viewer": "npx tailwind-config-viewer"
+  },
+  "dependencies": {
+    "@fontsource/work-sans": "^4.5.2",
+    "@nuxtjs/axios": "^5.13.6",
+    "core-js": "^3.15.1",
+    "nuxt-edge": "latest",
+    "nuxt-supabase": "^2.2.1"
+  },
+  "devDependencies": {
+    "@iconify-json/jam": "^1.0.2",
+    "@nuxt/bridge": "npm:@nuxt/bridge-edge",
+    "@nuxtjs/tailwindcss": "^4.2.1",
+    "@vue/runtime-dom": "^3.2.23",
+    "autoprefixer": "^10.4.0",
+    "daisyui": "^1.16.2",
+    "eslint-config-prettier": "^8.3.0",
+    "pg": "^8.7.1",
+    "postcss": "^8.4.4",
+    "prettier": "^2.3.2",
+    "sequelize": "^6.12.0-beta.1",
+    "sequelize-cli": "^6.3.0",
+    "tailwindcss": "^2.2.19",
+    "unplugin-icons": "^0.12.22",
+    "vue-template-compiler": "^2.6.14"
+  }
+}

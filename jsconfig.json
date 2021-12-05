@@ -1,0 +1,10 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "nuxt-supabase",
+      "unplugin-icons/types/vue"
+    ]
+  },
+  "exclude": ["node_modules", ".nuxt", "dist", ".output"]
+}
