@@ -1,34 +1,54 @@
 <template>
-  <div>
-    <form @submit.prevent="doSignup">
-      <div>
-        <input type="email"
-          placeholder="Email"
-          v-model="form.email" />
-      </div>
+  <div class="min-h-screen flex justify-center items-center md:py-3">
+    <div class="w-full card bordered md:w-80">
+      <div class="card-body border-2 bg-gray-50 rounded-lg px-2">
+        <h1 class="card-title text-center text-2xl text-indigo-900 select-none">
+          Sign Up Now!
+        </h1>
 
-      <div>
-        <input type="text"
-          placeholder="Full Name"
-          v-model="form.fullname" />
-      </div>
+        <form @submit.prevent="doSignup">
+          <div class="form-control m-3">
+            <input
+              type="email"
+              placeholder="Email"
+              class="input input-primary input-bordered"
+              v-model="form.email"
+            />
+          </div>
 
-      <div>
-        <input type="text"
-          placeholder="Username"
-          v-model="form.username" />
-      </div>
+          <div class="form-control m-3">
+            <input
+              type="text"
+              placeholder="Full Name"
+              class="input input-primary input-bordered"
+              v-model="form.fullname"
+            />
+          </div>
 
-      <div>
-        <input type="password"
-          placeholder="Password"
-          v-model="form.password" />
-      </div>
+          <div class="form-control m-3">
+            <input
+              type="text"
+              placeholder="Username"
+              class="input input-primary input-bordered"
+              v-model="form.username"
+            />
+          </div>
 
-      <div>
-        <button class="btn btn-primary">Sign Up!</button>
+          <div class="form-control m-3">
+            <input
+              type="password"
+              placeholder="Password"
+              class="input input-primary input-bordered"
+              v-model="form.password"
+            />
+          </div>
+
+          <div class="justify-center card-actions">
+            <button class="btn btn-primary">Sign Up!</button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -44,14 +64,13 @@ const form = reactive({
   email: '',
   fullname: '',
   username: '',
-  password: ''
+  password: '',
 })
 
 const doSignup = async () => {
-
   const { user, session, error } = await $supabase.auth.signUp({
     email: form.email,
-    password: form.password
+    password: form.password,
   })
 
   if (!error) {
@@ -59,11 +78,13 @@ const doSignup = async () => {
       {
         id: user.id,
         username: form.username,
-        fullname: form.fullname
-      }
+        fullname: form.fullname,
+      },
     ])
 
-    console.log(data, pfError)
+    if (!pfError) {
+      //redirect to login
+    }
   }
-};
+}
 </script>
