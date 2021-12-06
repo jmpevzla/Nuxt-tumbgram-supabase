@@ -64,7 +64,8 @@
 </template>
 
 <script setup>
-const { reactive, useNuxtApp, onMounted, ref } = require('#app')
+//
+import { reactive, useNuxtApp, onMounted, ref } from '#app'
 
 /**
  * @type NuxtApp
