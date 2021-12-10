@@ -7,6 +7,11 @@
         </h1>
 
         <form @submit.prevent="updateProfile" @reset.prevent="resetProfile">
+
+          <div class="flex justify-center">
+            <avatar :path.sync="form.avatar" @upload="updateProfile" />
+          </div>
+
           <div class="form-control m-3">
             <input
               type="text"
@@ -64,7 +69,7 @@
 </template>
 
 <script setup>
-//
+import Avatar from '@/components/Avatar.vue'
 import { reactive, useNuxtApp, onMounted, ref } from '#app'
 
 /**
@@ -76,7 +81,8 @@ const form = reactive({
   fullname: '',
   website: '',
   bio: '',
-  gender_id: 1
+  gender_id: 1,
+  avatar: null
 })
 
 let backup = null
@@ -90,7 +96,8 @@ const updateProfile = async () => {
       fullname: form.fullname,
       website: form.website,
       bio: form.bio,
-      gender_id: form.gender_id
+      gender_id: form.gender_id,
+      avatar: form.avatar
     })
 
     if (error) throw error
@@ -107,6 +114,7 @@ const resetProfile = async () => {
   form.website = backup.website
   form.bio = backup.bio
   form.gender_id = backup.gender_id
+  form.avatar = backup.avatar
 }
 
 const disableProfile = async () => {
@@ -139,7 +147,7 @@ onMounted(async () => {
     form.website = prof.data.website
     form.bio = prof.data.bio
     form.gender_id = prof.data.gender_id
-
+    form.avatar = prof.data.avatar
   } catch(error) {
     console.error(error.message)
   }
