@@ -2,17 +2,17 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('profiles', { 
+    await queryInterface.createTable('profiles', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        references: { 
-          model: { 
+        references: {
+          model: {
             schema: 'auth',
             tableName: 'users'
           },
-          key: 'id' 
+          key: 'id'
         }
       },
       username: {
@@ -24,8 +24,8 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(100)
       },
-      avatar: {
-        type: Sequelize.STRING(20)
+      avatar_url: {
+        type: Sequelize.STRING(40)
       },
       website: {
         allowNull: false,
@@ -40,11 +40,11 @@ module.exports = {
       gender_id: {
         allowNull: false,
         type: Sequelize.BIGINT,
-        references: { 
-          model: { 
+        references: {
+          model: {
             tableName: 'genders'
           },
-          key: 'id' 
+          key: 'id'
         },
         defaultValue: 1
       },
