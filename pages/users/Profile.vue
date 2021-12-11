@@ -7,7 +7,6 @@
         </h1>
 
         <form @submit.prevent="updateProfile" @reset.prevent="resetProfile">
-
           <div class="flex justify-center">
             <avatar :path.sync="form.avatar" @upload="updateProfile" />
           </div>
@@ -42,8 +41,13 @@
             <select
               placeholder="Gender"
               class="input input-primary input-bordered"
-              v-model="form.gender_id">
-              <option v-for="gender of genders" :key="gender.id" :value="gender.id">
+              v-model="form.gender_id"
+            >
+              <option
+                v-for="gender of genders"
+                :key="gender.id"
+                :value="gender.id"
+              >
                 {{ gender.name }}
               </option>
             </select>
@@ -53,7 +57,11 @@
             <p class="text-center text-sm select-none mb-2">
               This disable your account and your posts will isn't available!
             </p>
-            <button type="button" class="btn btn-warning" @click="disableProfile">
+            <button
+              type="button"
+              class="btn btn-warning"
+              @click="disableProfile"
+            >
               Disable your Account!
             </button>
           </div>
@@ -68,90 +76,99 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import Avatar from '@/components/Avatar.vue'
 import { reactive, useNuxtApp, onMounted, ref } from '#app'
 
-/**
- * @type NuxtApp
- */
-const { $supabase } = useNuxtApp()
+export default {
+  middleware: ['auth'],
+  setup() {
+    /**
+     * @type NuxtApp
+     */
+    const { $supabase } = useNuxtApp()
 
-const form = reactive({
-  fullname: '',
-  website: '',
-  bio: '',
-  gender_id: 1,
-  avatar: null
-})
-
-let backup = null
-
-const genders = ref([])
-
-const updateProfile = async () => {
-  try {
-    const { data, error } = await $supabase.from('profiles').update({
-      id: backup.id,
-      fullname: form.fullname,
-      website: form.website,
-      bio: form.bio,
-      gender_id: form.gender_id,
-      avatar: form.avatar
+    const form = reactive({
+      fullname: '',
+      website: '',
+      bio: '',
+      gender_id: 1,
+      avatar: null,
     })
 
-    if (error) throw error
+    let backup = null
 
-    backup = { ...data }
+    const genders = ref([])
 
-  } catch(error) {
-    console.error(error.message)
-  }
-}
+    const updateProfile = async () => {
+      try {
+        const { data, error } = await $supabase.from('profiles').update({
+          id: backup.id,
+          fullname: form.fullname,
+          website: form.website,
+          bio: form.bio,
+          gender_id: form.gender_id,
+          avatar: form.avatar,
+        })
 
-const resetProfile = async () => {
-  form.fullname = backup.fullname
-  form.website = backup.website
-  form.bio = backup.bio
-  form.gender_id = backup.gender_id
-  form.avatar = backup.avatar
-}
+        if (error) throw error
 
-const disableProfile = async () => {
-  try {
-    const { data, error } = await $supabase.from('profiles').update({
-      id: backup.id,
-      disable: true
+        backup = { ...data }
+      } catch (error) {
+        console.error(error.message)
+      }
+    }
+
+    const resetProfile = async () => {
+      form.fullname = backup.fullname
+      form.website = backup.website
+      form.bio = backup.bio
+      form.gender_id = backup.gender_id
+      form.avatar = backup.avatar
+    }
+
+    const disableProfile = async () => {
+      try {
+        const { data, error } = await $supabase.from('profiles').update({
+          id: backup.id,
+          disable: true,
+        })
+
+        if (error) throw error
+      } catch (error) {
+        console.error(error.message)
+      }
+    }
+
+    onMounted(async () => {
+      try {
+        const PromGenders = $supabase.from('genders').select('*')
+        const PromProfile = $supabase.from('profiles').select('*').single()
+
+        const [gend, prof] = await Promise.all([PromGenders, PromProfile])
+        if (gend.error) throw gend.error
+        if (prof.error) throw prof.error
+
+        genders.value = gend.data
+
+        backup = { ...prof.data }
+        form.fullname = prof.data.fullname
+        form.website = prof.data.website
+        form.bio = prof.data.bio
+        form.gender_id = prof.data.gender_id
+        form.avatar = prof.data.avatar
+      } catch (error) {
+        console.error(error.message)
+      }
     })
 
-    if (error) throw error
-
-  } catch(error) {
-    console.error(error.message)
-  }
+    return {
+      form,
+      genders,
+      updateProfile,
+      resetProfile,
+      disableProfile,
+    }
+  },
 }
-
-onMounted(async () => {
-  try {
-    const PromGenders = $supabase.from('genders').select('*')
-    const PromProfile = $supabase.from('profiles').select('*').single()
-
-    const [gend, prof] = await Promise.all([PromGenders, PromProfile])
-    if (gend.error) throw gend.error
-    if (prof.error) throw prof.error
-
-    genders.value = gend.data
-
-    backup = { ...prof.data }
-    form.fullname = prof.data.fullname
-    form.website = prof.data.website
-    form.bio = prof.data.bio
-    form.gender_id = prof.data.gender_id
-    form.avatar = prof.data.avatar
-  } catch(error) {
-    console.error(error.message)
-  }
-
-})
-
 </script>

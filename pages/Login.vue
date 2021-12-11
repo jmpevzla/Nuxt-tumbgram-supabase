@@ -1,12 +1,12 @@
 <template>
   <div class="min-h-screen flex justify-center items-center md:py-3">
     <div class="w-full card bordered md:w-80">
-      <div class="card-body border-2 bg-gray-50 rounded-lg px-2">
+      <div class="card-body border-2 bg-gray-50 rounded-lg px-2 py-4">
         <h1 class="card-title text-center text-2xl text-indigo-900 select-none">
           Login Now!
         </h1>
 
-        <form @submit.prevent="doLogin">
+        <form class="mb-3" @submit.prevent="doLogin">
           <div class="form-control m-3">
             <input
               type="email"
@@ -29,6 +29,10 @@
             <button class="btn btn-primary">Login!</button>
           </div>
         </form>
+
+        <div class="text-center">
+          <nuxt-link class="link link-hover link-primary" to="/signup">Sign Up</nuxt-link>
+        </div>
       </div>
     </div>
   </div>
@@ -36,7 +40,7 @@
 
 <script setup>
 import { useNuxtApp, reactive } from '#app'
-
+import { setCookie } from '@/utils'
 /**
  * @type NuxtApp
  */
@@ -55,8 +59,12 @@ const doLogin = async () => {
 
   console.log(user, session, error)
 
+  //document.cookie = `tumbgram.token=${session.access_token}; expires=Thu, 10 Dec 2099 12:00:00 UTC; path=/`;
+  setCookie('tumbgram.token', session.access_token)
+
   if (!error) {
     //redirect to home
+
   }
 }
 </script>

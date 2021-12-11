@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen flex justify-center items-center md:py-3">
+  <div class="min-h-screen flex justify-center items-center md:py-2">
     <div class="w-full card bordered md:w-80">
-      <div class="card-body border-2 bg-gray-50 rounded-lg px-2">
+      <div class="card-body border-2 bg-gray-50 rounded-lg px-2 py-4">
         <h1 class="card-title text-center text-2xl text-indigo-900 select-none">
           Sign Up Now!
         </h1>
 
-        <form @submit.prevent="doSignup">
+        <form class="mb-3" @submit.prevent="doSignup">
           <div class="form-control m-3">
             <input
               type="email"
@@ -46,13 +46,19 @@
           <div class="justify-center card-actions">
             <button class="btn btn-primary">Sign Up!</button>
           </div>
+
         </form>
+
+        <div class="text-center">
+          <nuxt-link class="link link-hover link-primary" to="/login">Login</nuxt-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+//
 import { useNuxtApp, reactive } from '#app'
 
 /**

@@ -1,4 +1,6 @@
 import { defineNuxtConfig } from '@nuxt/bridge'
+// import cookieParser from 'cookie-parser'
+// import supabaseAuth from './server-middleware/supabase-auth'
 
 export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -65,5 +67,10 @@ export default defineNuxtConfig({
 
   tailwindcss: {
     viewer: false
-  }
+  },
+
+  // serverMiddleware: [
+  //   { handler: cookieParser() },
+  //   { handler: supabaseAuth }
+  // ]
 })
