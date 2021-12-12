@@ -9,5 +9,5 @@ export function setCookie(cname, cvalue, exdays = 1) {
   let expires = "expires="+ d.toUTCString();
   const jvalue = JSON.stringify(cvalue)
 
-  document.cookie = cname + "=" + jvalue + ";" + expires + ";path=/";
+  document.cookie = cname + "=" + jvalue + ";" + expires + ";SameSite=None; Secure; path=/";
 }

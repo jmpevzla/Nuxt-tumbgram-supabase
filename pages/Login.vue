@@ -31,45 +31,58 @@
         </form>
 
         <div class="text-center">
-          <nuxt-link class="link link-hover link-primary" to="/signup">Sign Up</nuxt-link>
+          <nuxt-link class="link link-hover link-primary" to="/signup"
+            >Sign Up</nuxt-link
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script>
 import { useNuxtApp, reactive, useRouter } from '#app'
 import { setCookie } from '@/utils'
-/**
- * @type NuxtApp
- */
-const { $supabase } = useNuxtApp()
-const router = useRouter()
 
-const form = reactive({
-  email: '',
-  password: '',
-})
+export default {
+  middleware: ['no-auth'],
+  setup() {
+    /**
+     * @type NuxtApp
+     */
+    const { $supabase } = useNuxtApp()
+    const router = useRouter()
 
-const doLogin = async () => {
-  const { user, session, error } = await $supabase.auth.signIn({
-    email: form.email,
-    password: form.password,
-  })
+    const form = reactive({
+      email: '',
+      password: '',
+    })
 
-  console.log(user, session, error)
+    const doLogin = async () => {
+      const { user, session, error } = await $supabase.auth.signIn({
+        email: form.email,
+        password: form.password,
+      })
 
-  //document.cookie = `tumbgram.token=${session.access_token}; expires=Thu, 10 Dec 2099 12:00:00 UTC; path=/`;
-  setCookie('tumbgram', {
-    token: session.access_token
-  })
+      console.log(user, session, error)
 
-  if (!error) {
-    //redirect to home
-    router.push('/')
-  } else {
-    alert(error.message)
-  }
+      //document.cookie = `tumbgram.token=${session.access_token}; expires=Thu, 10 Dec 2099 12:00:00 UTC; path=/`;
+      setCookie('tumbgram', {
+        token: session.access_token,
+      })
+
+      if (!error) {
+        //redirect to home
+        router.push('/')
+      } else {
+        alert(error.message)
+      }
+    }
+
+    return {
+      form,
+      doLogin
+    }
+  },
 }
 </script>
