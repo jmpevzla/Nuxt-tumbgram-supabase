@@ -61,7 +61,9 @@ const doLogin = async () => {
   console.log(user, session, error)
 
   //document.cookie = `tumbgram.token=${session.access_token}; expires=Thu, 10 Dec 2099 12:00:00 UTC; path=/`;
-  setCookie('tumbgram.token', session.access_token)
+  setCookie('tumbgram', {
+    token: session.access_token
+  })
 
   if (!error) {
     //redirect to home

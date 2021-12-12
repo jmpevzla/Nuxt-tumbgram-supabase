@@ -21,7 +21,8 @@ async function isAuth(ctx) {
 
   if (!req.headers.cookie) return false
 
-  const token = parse(req.headers.cookie)['tumbgram.token']
+  const tumbgram = parse(req.headers.cookie)['tumbgram']
+  const { token } = JSON.parse(tumbgram)
 
   try {
     const decoded = verify(token, process.env.SUPABASE_JWT)
