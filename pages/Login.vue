@@ -39,12 +39,13 @@
 </template>
 
 <script setup>
-import { useNuxtApp, reactive } from '#app'
+import { useNuxtApp, reactive, useRouter } from '#app'
 import { setCookie } from '@/utils'
 /**
  * @type NuxtApp
  */
 const { $supabase } = useNuxtApp()
+const router = useRouter()
 
 const form = reactive({
   email: '',
@@ -64,7 +65,9 @@ const doLogin = async () => {
 
   if (!error) {
     //redirect to home
-
+    router.push('/')
+  } else {
+    alert(error.message)
   }
 }
 </script>
