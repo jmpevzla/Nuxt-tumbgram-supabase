@@ -103,19 +103,21 @@ export default {
     const updateProfile = async () => {
       try {
         const { data, error } = await $supabase.from('profiles').update({
-          id: backup.id,
           fullname: form.fullname,
           website: form.website,
           bio: form.bio,
           gender_id: form.gender_id,
           avatar: form.avatar,
+        }, {
+          returning: 'minimal'
         })
 
         if (error) throw error
 
-        backup = { ...data }
+        backup = { ...form }
+
       } catch (error) {
-        console.error(error.message)
+        console.error(error)
       }
     }
 
@@ -130,8 +132,9 @@ export default {
     const disableProfile = async () => {
       try {
         const { data, error } = await $supabase.from('profiles').update({
-          id: backup.id,
           disable: true,
+        }, {
+          returning: 'minimal'
         })
 
         if (error) throw error
@@ -142,8 +145,9 @@ export default {
 
     onMounted(async () => {
       try {
+        const user = $supabase.auth.user()
         const PromGenders = $supabase.from('genders').select('*')
-        const PromProfile = $supabase.from('profiles').select('*').single()
+        const PromProfile = $supabase.from('profiles').select('*').eq('id', user.id).single()
 
         const [gend, prof] = await Promise.all([PromGenders, PromProfile])
         if (gend.error) throw gend.error
