@@ -21,7 +21,7 @@ module.exports = {
     await queryInterface.sequelize.query(`
       create policy "Users can update own post."
       on posts for update
-      with check ( auth.uid() = user_id );
+      using ( auth.uid() = user_id );
     `)
 
     await queryInterface.sequelize.query(`

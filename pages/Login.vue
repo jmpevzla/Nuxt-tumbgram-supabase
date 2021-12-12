@@ -64,17 +64,18 @@ export default {
         password: form.password,
       })
 
-      console.log(user, session, error)
-
-      //document.cookie = `tumbgram.token=${session.access_token}; expires=Thu, 10 Dec 2099 12:00:00 UTC; path=/`;
-      setCookie('tumbgram', {
-        token: session.access_token,
-      })
-
       if (!error) {
+        console.log(user, session, error)
+
+        //document.cookie = `tumbgram.token=${session.access_token}; expires=Thu, 10 Dec 2099 12:00:00 UTC; path=/`;
+        setCookie('tumbgram', {
+          token: session.access_token,
+        })
+
         //redirect to home
         router.push('/')
       } else {
+        form.password = ''
         alert(error.message)
       }
     }

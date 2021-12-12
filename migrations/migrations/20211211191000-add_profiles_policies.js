@@ -21,7 +21,7 @@ module.exports = {
     await queryInterface.sequelize.query(`
       create policy "Users can update own profile."
       on profiles for update
-      with check ( auth.uid() = id );
+      using ( auth.uid() = id );
     `)
   },
 

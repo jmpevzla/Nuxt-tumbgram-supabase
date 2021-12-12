@@ -46,51 +46,77 @@
           <div class="justify-center card-actions">
             <button class="btn btn-primary">Sign Up!</button>
           </div>
-
         </form>
 
         <div class="text-center">
-          <nuxt-link class="link link-hover link-primary" to="/login">Login</nuxt-link>
+          <nuxt-link class="link link-hover link-primary" to="/login"
+            >Login</nuxt-link
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-//
-import { useNuxtApp, reactive } from '#app'
+<script>
+import { useNuxtApp, reactive, useRouter } from '#app'
 
-/**
- * @type NuxtApp
- */
-const { $supabase } = useNuxtApp()
+export default {
+  middleware: ['no-auth'],
+  setup() {
+    /**
+     * @type NuxtApp
+     */
+    const { $supabase } = useNuxtApp()
+    const router = useRouter()
 
-const form = reactive({
-  email: '',
-  fullname: '',
-  username: '',
-  password: '',
-})
+    const form = reactive({
+      email: '',
+      fullname: '',
+      username: '',
+      password: '',
+    })
 
-const doSignup = async () => {
-  const { user, session, error } = await $supabase.auth.signUp({
-    email: form.email,
-    password: form.password,
-  })
+    const doSignup = async () => {
+      const { user, session, error } = await $supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+      }, {
+        data: {
+          username: form.username,
+          fullname: form.fullname
+        }
+      })
 
-  if (!error) {
-    const { data, error: pfError } = await $supabase.from('profiles').insert([
-      {
-        id: user.id,
-        username: form.username,
-        fullname: form.fullname,
-      },
-    ])
+      if (!error) {
+        router.push('/login')
+      } else {
+        alert(error.message)
+      }
 
-    if (!pfError) {
-      //redirect to login
+      //if (!error) {
+      //   const { data, error: pfError } = await $supabase
+      //     .from('profiles')
+      //     .insert([
+      //       {
+      //         id: user.id,
+      //         username: form.username,
+      //         fullname: form.fullname,
+      //       },
+      //     ])
+
+      //   if (!pfError) {
+      //     //redirect to login
+      //   } else {
+      //     alert(pfError.message)
+      //   }
+      // }
     }
-  }
+
+    return {
+      form,
+      doSignup
+    }
+  },
 }
 </script>
